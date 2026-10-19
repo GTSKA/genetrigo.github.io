@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gene Trigo Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Gene Trigo — Senior Gameplay Programmer, Unreal Engine 5 and C++.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: engine-editor feel — a single 1120px column; work shown in "viewport" frames with an axis gizmo; metadata in mono like editor details panels. */
+:root {
+  --bg: #F2F4F5;
+  --surface: #FFFFFF;
+  --ink: #12161B;
+  --muted: #545F69;
+  --line: #D3D9DD;
+  --accent: #0E6E63;
+  --accent-soft: #DCEFEC;
+  --marker: #A64B05;
+  --vp-a: #E7EBEE;
+  --vp-b: #DCE2E6;
+  --ax-x: #C2362F;
+  --ax-y: #3E8E2F;
+  --ax-z: #2F5FC2;
+  --f-display: "Archivo", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1316; --surface: #161C20; --ink: #E5EAED; --muted: #9AA6AF; --line: #2A3339;
+    --accent: #45C2B1; --accent-soft: #143430; --marker: #F0A04B;
+    --vp-a: #1A2126; --vp-b: #20282E; --ax-x: #E5605A; --ax-y: #6CC25A; --ax-z: #6A93F0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1316; --surface: #161C20; --ink: #E5EAED; --muted: #9AA6AF; --line: #2A3339;
+  --accent: #45C2B1; --accent-soft: #143430; --marker: #F0A04B;
+  --vp-a: #1A2126; --vp-b: #20282E; --ax-x: #E5605A; --ax-y: #6CC25A; --ax-z: #6A93F0;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+h1, h2, h3 { font-family: var(--f-display); font-stretch: 78%; text-wrap: balance; margin: 0; line-height: 1.02; }
+p { margin: 0; }
+ul { margin: 0; padding-left: 18px; }
+li + li { margin-top: 4px; }
+
+.wrap { max-width: 1120px; margin: 0 auto; }
+.mono { font-family: var(--f-mono); font-size: 13px; letter-spacing: 0.02em; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+
+/* Top bar */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 56px; flex-wrap: wrap; padding-block: 8px; }
+.brand { font-family: var(--f-display); font-stretch: 78%; font-weight: 800; font-size: 22px; color: var(--ink); text-decoration: none; letter-spacing: 0.01em; }
+.nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.nav a { font-family: var(--f-mono); font-size: 13px; color: var(--muted); text-decoration: none; }
+.nav a:hover { color: var(--accent); }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 48px; align-items: center; padding-block: 64px 40px; }
+.hero h1 { font-size: clamp(44px, 7vw, 84px); font-weight: 800; letter-spacing: -0.01em; margin-top: 14px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.lede { margin-top: 20px; font-size: 18px; color: var(--muted); max-width: 54ch; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
+  font-family: var(--f-mono); font-size: 14px; text-decoration: none; border-radius: 4px;
+  border: 1px solid var(--accent); cursor: pointer; background: none;
+}
+.btn.primary { background: var(--accent); color: var(--surface); }
+.btn.ghost { color: var(--accent); }
+
+/* Viewport placeholder (media slot) */
+.vp {
+  position: relative; aspect-ratio: 16 / 9; max-width: 100%; width: 100%;
+  background-color: var(--vp-a);
+  background-image:
+    linear-gradient(var(--vp-b) 1px, transparent 1px),
+    linear-gradient(90deg, var(--vp-b) 1px, transparent 1px);
+  background-size: 32px 32px;
+  border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+}
+.vp .slot { font-family: var(--f-mono); font-size: 13px; color: var(--muted); padding: 16px; max-width: 34ch; }
+.vp .slot b { display: block; color: var(--ink); font-weight: 500; margin-bottom: 4px; }
+.vp .gizmo { position: absolute; left: 12px; bottom: 10px; width: 44px; height: 44px; }
+.vp .tag { position: absolute; top: 10px; left: 12px; font-family: var(--f-mono); font-size: 11px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* Stat strip */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 1px solid var(--line); }
+.stat { padding: 20px 20px 20px 0; display: flex; flex-direction: column; gap: 2px; }
+.stat + .stat { padding-left: 20px; border-left: 1px solid var(--line); }
+.stat .n { font-family: var(--f-display); font-stretch: 78%; font-weight: 800; font-size: 36px; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .l { font-size: 14px; color: var(--muted); }
+
+/* Sections */
+section.block { padding-block: 72px 8px; display: flex; flex-direction: column; gap: 28px; }
+.sec-head { display: flex; flex-direction: column; gap: 10px; max-width: 70ch; }
+.sec-head h2 { font-size: clamp(34px, 4.6vw, 52px); font-weight: 800; }
+.sec-head p { color: var(--muted); }
+
+/* Lab (personal project) */
+.lab { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: start; padding: 28px; background: var(--surface); border: 1px dashed var(--accent); border-radius: 6px; }
+.lab h3 { font-size: 32px; font-weight: 750; }
+.lab .body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.status { display: inline-flex; align-self: flex-start; gap: 8px; align-items: center; font-family: var(--f-mono); font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); }
+.status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--marker); }
+
+/* Case studies */
+.case { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; padding-block: 36px; border-top: 1px solid var(--line); align-items: start; }
+.case:nth-of-type(even) .media { order: 2; }
+.case .body { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.case h3 { font-size: clamp(30px, 3.4vw, 40px); font-weight: 780; }
+.details { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 16px; font-family: var(--f-mono); font-size: 13px; }
+.details dt { color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; padding-top: 2px; }
+.details dd { margin: 0; }
+.psr { display: flex; flex-direction: column; gap: 12px; }
+.psr h4 { margin: 0 0 4px; font-family: var(--f-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.fill { font-family: var(--f-mono); font-size: 14px; color: var(--marker); }
+
+/* Compact grids */
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tile h3 { font-size: 26px; font-weight: 760; }
+.tile .mono { color: var(--muted); }
+.tile p { font-size: 15px; }
+
+/* Skills */
+.skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.skills h3 { font-family: var(--f-mono); font-stretch: normal; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-family: var(--f-mono); font-size: 13px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }
+
+/* About + contact */
+.about { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.about .text { display: flex; flex-direction: column; gap: 14px; max-width: 62ch; }
+.contact { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.contact .row { display: flex; flex-direction: column; gap: 4px; }
+.contact .k { font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.email { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.email code { font-family: var(--f-mono); font-size: 15px; user-select: all; overflow-wrap: anywhere; }
+.copy { min-height: 36px; padding: 0 12px; font-size: 12px; }
+
+footer { border-top: 1px solid var(--line); margin-top: 72px; padding-block: 24px 40px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--muted); font-family: var(--f-mono); font-size: 12px; }
+
+@media (max-width: 860px) {
+  .hero, .lab, .case, .about { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .case:nth-of-type(even) .media { order: 0; }
+  .grid3, .skills { grid-template-columns: minmax(0, 1fr); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(3) { padding-left: 0; border-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .hero { padding-block: 40px 32px; }
+  .nav { gap: 14px; }
+}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="gizmo">
+      <line x1="10" y1="34" x2="38" y2="34" stroke="var(--ax-x)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="10" y1="34" x2="10" y2="6" stroke="var(--ax-z)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="10" y1="34" x2="26" y2="20" stroke="var(--ax-y)" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="10" cy="34" r="3" fill="var(--ink)"/>
+    </g>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">GENE TRIGO</a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#shipped">Shipped</a>
+      <a href="#lab">Lab</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="top">
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div>
+      <div class="eyebrow">Senior Gameplay Programmer · UE5 / C++</div>
+      <h1 id="hero-title">I build game mechanics and the <em>systems</em> they run on.</h1>
+      <p class="lede">Senior engineer with 10+ years in games and 15+ years of C++. From porting Gameloft titles across platforms to building gameplay, abilities and a full weather system in Unreal Engine 5 for PC and consoles. Trained in mathematics and physics, I enjoy turning a hard problem into something that feels good to play.</p>
+      <div class="cta">
+        <a class="btn primary" href="#work">See my work</a>
+        <a class="btn ghost" href="Gene_Trigo_CV.pdf">Download CV</a>
+      </div>
+    </div>
+    <div class="vp">
+      <span class="tag">Showreel</span>
+      <div class="slot"><b>[SHOWREEL · 60–90 s]</b>Best moments from the personal demo and any client footage you have permission to show.</div>
+      <svg class="gizmo" viewBox="0 0 44 44" aria-hidden="true"><use href="#gizmo"/></svg>
+    </div>
+  </section>
+
+  <div class="stats" role="list">
+    <div class="stat" role="listitem"><span class="n">15+</span><span class="l">years writing C++</span></div>
+    <div class="stat" role="listitem"><span class="n">10+</span><span class="l">years building games</span></div>
+    <div class="stat" role="listitem"><span class="n">3</span><span class="l">Gameloft titles shipped</span></div>
+    <div class="stat" role="listitem"><span class="n">5</span><span class="l">engines: UE5, Unity, Godot, Kanzi, custom C++</span></div>
+  </div>
+
+  <section class="block" id="lab" aria-labelledby="lab-title">
+    <div class="sec-head">
+      <div class="eyebrow">Lab · personal project</div>
+      <h2 id="lab-title">Playable demo</h2>
+      <p>A small, finished UE5 project I can show in full: video, source and the design decisions behind the mechanics.</p>
+    </div>
+    <article class="lab">
+      <div class="vp">
+        <span class="tag">Gameplay capture</span>
+        <div class="slot"><b>[VIDEO · 30–60 s]</b>Short capture of the core mechanic in action.</div>
+        <svg class="gizmo" viewBox="0 0 44 44" aria-hidden="true"><use href="#gizmo"/></svg>
+      </div>
+      <div class="body">
+        <span class="status">In development</span>
+        <h3>[PROJECT TITLE]</h3>
+        <dl class="details">
+          <dt>Engine</dt><dd>Unreal Engine 5 · C++</dd>
+          <dt>Focus</dt><dd>[Core mechanic]</dd>
+          <dt>Source</dt><dd><a href="https://github.com/GTSKA">[GitHub repo link]</a></dd>
+        </dl>
+        <p>[Two or three sentences: what the player does, what makes it feel good, and the most interesting technical problem you solved.]</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="block" id="work" aria-labelledby="work-title">
+    <div class="sec-head">
+      <div class="eyebrow">Professional work</div>
+      <h2 id="work-title">Selected projects</h2>
+      <p>Client work through Titan Games. Some projects are under NDA, so these focus on the problem and my approach rather than proprietary code.</p>
+    </div>
+
+    <article class="case">
+      <div class="media">
+        <div class="vp">
+          <span class="tag">Weather system</span>
+          <div class="slot"><b>[VIDEO OR DIAGRAM]</b>Wind affecting the aircraft, clouds, and the editor preview. Use only footage you're allowed to share; otherwise a diagram of the system.</div>
+          <svg class="gizmo" viewBox="0 0 44 44" aria-hidden="true"><use href="#gizmo"/></svg>
+        </div>
+      </div>
+      <div class="body">
+        <h3>Arcade Flight Simulator: weather system</h3>
+        <dl class="details">
+          <dt>Engine</dt><dd>Unreal Engine 5 · C++</dd>
+          <dt>Platform</dt><dd>PC &amp; consoles</dd>
+          <dt>Role</dt><dd>Designed and built the system end to end</dd>
+        </dl>
+        <div class="psr">
+          <div><h4>Problem</h4><p>The game needed weather that changes how the aircraft flies, that designers can tune without playing the level, and that QA can reproduce on demand.</p></div>
+          <div><h4>What I built</h4>
+            <ul>
+              <li>Wind simulation that feeds into flight behavior</li>
+              <li>Cloud rendering and weather-driven FMOD audio</li>
+              <li>An in-editor preview so designers see weather changes without entering play mode</li>
+              <li>QA debug tools, including teleporting the aircraft to the free camera position</li>
+            </ul>
+          </div>
+          <div><h4>Result</h4><p class="fill">[What changed for the team or the game: iteration time, bugs caught, designer feedback.]</p></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="media">
+        <div class="vp">
+          <span class="tag">Abilities</span>
+          <div class="slot"><b>[VIDEO · abilities in play]</b>Or a profiler before/after capture from the optimization work.</div>
+          <svg class="gizmo" viewBox="0 0 44 44" aria-hidden="true"><use href="#gizmo"/></svg>
+        </div>
+      </div>
+      <div class="body">
+        <h3>Star Plunder: abilities and performance</h3>
+        <dl class="details">
+          <dt>Engine</dt><dd>Unreal Engine 5 · C++</dd>
+          <dt>Genre</dt><dd>Multiplayer shooter</dd>
+          <dt>Role</dt><dd>Gameplay programmer</dd>
+        </dl>
+        <div class="psr">
+          <div><h4>Problem</h4><p class="fill">[What the abilities needed to do, and where performance was falling short.]</p></div>
+          <div><h4>What I built</h4>
+            <ul>
+              <li>Abilities on Unreal's Gameplay Ability System</li>
+              <li>Led performance optimization work across the game</li>
+            </ul>
+          </div>
+          <div><h4>Result</h4><p class="fill">[Frame time gained, number of abilities shipped, or another concrete outcome.]</p></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="media">
+        <div class="vp">
+          <span class="tag">Mesh unfolding</span>
+          <div class="slot"><b>[IMAGE · 3D model → flat pattern]</b>A before/after of a mesh being unfolded tells this story in one picture.</div>
+          <svg class="gizmo" viewBox="0 0 44 44" aria-hidden="true"><use href="#gizmo"/></svg>
+        </div>
+      </div>
+      <div class="body">
+        <h3>3D mesh unfolding plugin</h3>
+        <dl class="details">
+          <dt>Engine</dt><dd>Unreal Engine 4 · C++</dd>
+          <dt>Technique</dt><dd>Least Squares Conformal Maps (LSCM)</dd>
+          <dt>Role</dt><dd>Plugin author</dd>
+        </dl>
+        <div class="psr">
+          <div><h4>Problem</h4><p>A third-party 3D design application needed to turn 3D models into flat patterns.</p></div>
+          <div><h4>What I built</h4>
+            <ul>
+              <li>A UE4 plugin implementing LSCM to unfold meshes into flat patterns</li>
+              <li>Procedural mesh generation for the same application</li>
+            </ul>
+          </div>
+          <div><h4>Result</h4><p class="fill">[How it was used by the client.]</p></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="case">
+      <div class="media">
+        <div class="vp">
+          <span class="tag">Online play</span>
+          <div class="slot"><b>[VIDEO · two clients in a match]</b>Side-by-side capture showing players in sync.</div>
+          <svg class="gizmo" viewBox="0 0 44 44" aria-hidden="true"><use href="#gizmo"/></svg>
+        </div>
+      </div>
+      <div class="body">
+        <h3>Beanland: online multiplayer</h3>
+        <dl class="details">
+          <dt>Engine</dt><dd>Unity · C#</dd>
+          <dt>Stack</dt><dd>Photon Fusion 2 · Azure · PlayFab</dd>
+          <dt>Role</dt><dd>Multiplayer programmer</dd>
+        </dl>
+        <div class="psr">
+          <div><h4>What I built</h4>
+            <ul>
+              <li>Online multiplayer on Photon Fusion 2</li>
+              <li>Backend services with Azure and PlayFab</li>
+            </ul>
+          </div>
+          <div><h4>Result</h4><p class="fill">[Player count per match, platforms, or launch status.]</p></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="block" id="shipped" aria-labelledby="shipped-title">
+    <div class="sec-head">
+      <div class="eyebrow">Gameloft · 2015–2018</div>
+      <h2 id="shipped-title">Shipped titles</h2>
+      <p>Porting shipped iOS games to Android, Windows Phone and Windows Store in custom C++/C# engines.</p>
+    </div>
+    <div class="grid3">
+      <article class="tile">
+        <span class="mono">Online FPS · Android port</span>
+        <h3>Modern Combat Versus</h3>
+        <p>Owned the input system for this competitive online shooter as part of the Android porting team.</p>
+      </article>
+      <article class="tile">
+        <span class="mono">Open world · Havok</span>
+        <h3>Gangstar New Orleans</h3>
+        <p>Made Havok compatible with Windows Store builds, fixed 3D rendering bugs and optimized the Android port.</p>
+      </article>
+      <article class="tile">
+        <span class="mono">Strategy · multiplayer</span>
+        <h3>Siegefall</h3>
+        <p>Tracked down multiplayer desyncs caused by floating-point differences between platforms.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="more-title">
+    <div class="sec-head">
+      <div class="eyebrow">Also</div>
+      <h2 id="more-title">Mobile, graphics and simulation</h2>
+    </div>
+    <div class="grid3">
+      <article class="tile">
+        <span class="mono">Unity · C# · Mobile · Lead</span>
+        <h3>Koi Pond &amp; casual titles</h3>
+        <p>Built Koi Pond's grid system and math-heavy gameplay logic. Led casual titles: drag and drop, arcade, drop puzzle, sudoku-style and merge games.</p>
+      </article>
+      <article class="tile">
+        <span class="mono">Kanzi · Godot · OpenGL · Visteon</span>
+        <h3>Automotive cockpit graphics</h3>
+        <p>Faked 3D lighting, depth and roughness on 2D nodes, optimized shaders for low-end GPUs and generated a procedural highway with traffic.</p>
+      </article>
+      <article class="tile">
+        <span class="mono">C++ · Scientific computing</span>
+        <h3>Earthquake impact simulator</h3>
+        <p>Programmed the seismic-wave simulation and 3D visualization for the Valley of Mexico, working with a physics PhD.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="block" id="skills" aria-labelledby="skills-title">
+    <div class="sec-head">
+      <div class="eyebrow">Toolbox</div>
+      <h2 id="skills-title">Skills</h2>
+    </div>
+    <div class="skills">
+      <div>
+        <h3>Engines</h3>
+        <div class="chips"><span class="chip">Unreal Engine 5 / 4</span><span class="chip">Unity</span><span class="chip">Godot</span><span class="chip">Kanzi</span><span class="chip">Havok</span><span class="chip">Custom C++ engines</span></div>
+      </div>
+      <div>
+        <h3>Languages</h3>
+        <div class="chips"><span class="chip">C++</span><span class="chip">C#</span><span class="chip">Blueprints</span><span class="chip">HLSL / GLSL</span><span class="chip">Swift</span><span class="chip">Objective-C</span></div>
+      </div>
+      <div>
+        <h3>Gameplay &amp; systems</h3>
+        <div class="chips"><span class="chip">Gameplay Ability System</span><span class="chip">Multiplayer</span><span class="chip">Performance</span><span class="chip">Editor &amp; debug tools</span><span class="chip">FMOD</span><span class="chip">Procedural geometry</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="contact" aria-labelledby="about-title">
+    <div class="about">
+      <div class="text">
+        <div class="eyebrow">About</div>
+        <h2 id="about-title" style="font-size: clamp(34px, 4.6vw, 52px); font-weight: 800;">Mathematician by training, game programmer by choice.</h2>
+        <p>I studied Mathematics and Physics with a major in applied mathematics for computer science. Before games I wrote linear-algebra solvers, an election forecasting system for Mexico City's 2012 election and a seismic simulator. That background shows up in my work as simulation, optimization and careful debugging.</p>
+        <p>Today I work remotely from Mexico as a senior engineer embedded in game studios. I'm looking for a senior gameplay programming role where I can own mechanics from prototype to ship.</p>
+      </div>
+      <aside class="contact" aria-label="Contact">
+        <div class="row">
+          <span class="k">Email</span>
+          <div class="email"><code id="email-text">gtskatalites@gmail.com</code><button class="btn ghost copy" id="copy-email" type="button">Copy</button></div>
+        </div>
+        <div class="row"><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/gtrigosoto">linkedin.com/in/gtrigosoto</a></div>
+        <div class="row"><span class="k">GitHub</span><a href="https://github.com/GTSKA">github.com/GTSKA</a></div>
+        <div class="row"><span class="k">Location</span><span>México · open to remote</span></div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap"><span>© 2026 Gene Trigo</span><span>Built for GitHub Pages</span></div>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy-email');
+  var txt = document.getElementById('email-text');
+  btn.addEventListener('click', function () {
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); };
+    var fallback = function () {
+      var r = document.createRange(); r.selectNodeContents(txt);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected';
+    };
+    try {
+      navigator.clipboard.writeText(txt.textContent).then(done, fallback);
+    } catch (e) { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>
